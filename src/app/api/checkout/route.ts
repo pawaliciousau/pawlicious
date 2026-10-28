@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       mode: "payment",
       line_items,
       // Shows an "Add promotion code" field on Stripe's payment page. The codes
-      // themselves (e.g. WOOFWOOF) are managed in the Stripe dashboard.
+      // themselves are managed in the Stripe dashboard and are never listed here.
       allow_promotion_codes: true,
       ...(pickup ? {} : { shipping_address_collection: { allowed_countries: ["AU" as const] } }),
       phone_number_collection: { enabled: true },
