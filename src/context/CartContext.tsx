@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { DELIVERY_FEE, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
+import { isUnavailable } from "@/lib/products";
 
 export type CartLine = {
   slug: string;
@@ -75,7 +76,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       } else {
         const raw = window.localStorage.getItem(STORAGE_KEY);
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        if (raw) setLines(JSON.parse(raw));
+        // Drop anything that has since become unavailable (e.g. a cart saved before
+        // a recipe was paused) so it can't reach checkout.
+        if (raw) setLines((JSON.parse(raw) as CartLine[]).filter((l) => !isUnavailable(l.slug)));
       }
     } catch {
       // ignore malformed storage
@@ -93,6 +96,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [lines, hydrated]);
 
   const addItem = useCallback((line: Omit<CartLine, "qty">, qty = 1) => {
+    if (isUnavailable(line.slug)) return;
     setLines((prev) => {
       const existing = prev.find(
         (l) => l.slug === line.slug && l.grams === line.grams

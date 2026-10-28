@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/products";
-import { SIZE_OPTIONS } from "@/lib/products";
+import { SIZE_OPTIONS, UNAVAILABLE_LABEL } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { EASE_OUT } from "@/lib/animations";
@@ -28,6 +28,7 @@ export default function ProductDetail({
   const { addItem } = useCart();
   const size = SIZE_OPTIONS[sizeIdx];
   const accentText = product.accent === "coral" ? "text-coral" : "text-teal";
+  const unavailable = product.unavailable === true;
 
   useEffect(() => {
     function onScroll() {
@@ -39,6 +40,7 @@ export default function ProductDetail({
   }, []);
 
   function handleAdd() {
+    if (unavailable) return;
     addItem(
       {
         slug: product.slug,
@@ -66,10 +68,14 @@ export default function ProductDetail({
           </p>
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-            <ProductGallery images={product.gallery} productName={product.name} />
+            <ProductGallery
+              images={product.gallery}
+              productName={product.name}
+              unavailable={unavailable}
+            />
 
             <div>
-              {product.isFavourite && (
+              {product.isFavourite && !unavailable && (
                 <span className="mb-3 inline-block rounded-chip bg-coral px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-cream-soft">
                   Fan favourite
                 </span>
@@ -80,6 +86,21 @@ export default function ProductDetail({
               <p className={`mt-2 script-accent text-2xl ${accentText}`}>{product.tagline}</p>
               <p className="mt-5 max-w-md text-lg text-ink-soft">{product.longDescription}</p>
 
+              {unavailable ? (
+                <div className="mt-8 rounded-card border-2 border-coral bg-coral-tint p-6">
+                  <p className="font-display text-xl font-bold uppercase tracking-wide text-coral-dark">
+                    {UNAVAILABLE_LABEL}
+                  </p>
+                  <p className="mt-2 text-ink-soft">
+                    {product.name} isn&apos;t available to order right now. Our other recipes are
+                    ready when you are.
+                  </p>
+                  <Link href="/shop" className="btn btn-coral mt-5 inline-flex">
+                    Shop other recipes
+                  </Link>
+                </div>
+              ) : (
+              <>
               <div className="mt-8">
                 <p className="mb-3 text-sm font-bold text-ink-soft">Size</p>
                 <div className="flex flex-wrap gap-3">
@@ -113,6 +134,8 @@ export default function ProductDetail({
                   Add to cart — {formatPrice(size.price * qty)}
                 </button>
               </div>
+              </>
+              )}
 
               <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-ink/10 pt-6 text-sm font-bold text-ink-soft">
                 <span>100% natural ingredients</span>
@@ -147,6 +170,7 @@ export default function ProductDetail({
       )}
 
       {/* Sticky mobile buy bar */}
+      {!unavailable && (
       <motion.div
         initial={false}
         animate={{ y: showStickyBar ? 0 : "100%" }}
@@ -166,6 +190,7 @@ export default function ProductDetail({
           </button>
         </div>
       </motion.div>
+      )}
     </>
   );
 }

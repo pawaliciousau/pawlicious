@@ -15,7 +15,11 @@ export type Product = {
   heroImage: string;
   gallery: string[];
   isFavourite?: boolean;
+  /** Not orderable right now. Shown with a banner everywhere and blocked at the cart and checkout. */
+  unavailable?: boolean;
 };
+
+export const UNAVAILABLE_LABEL = "Option currently unavailable";
 
 export const SIZE_OPTIONS: SizeOption[] = [
   { label: "500g tub", grams: 500, price: 18.95 },
@@ -119,6 +123,7 @@ export const PRODUCTS: Product[] = [
       "/assets/photos/mixing-turkey.jpg",
       "/assets/photos/dog-turkey.jpg",
     ],
+    unavailable: true,
   },
   {
     slug: "kangaroo",
@@ -136,11 +141,16 @@ export const PRODUCTS: Product[] = [
       "/assets/photos/mixing-kangaroo.jpg",
       "/assets/photos/dog-kangaroo.jpg",
     ],
+    unavailable: true,
   },
 ];
 
 export function getProductBySlug(slug: string): Product | undefined {
   return PRODUCTS.find((p) => p.slug === slug);
+}
+
+export function isUnavailable(slug: string): boolean {
+  return getProductBySlug(slug)?.unavailable === true;
 }
 
 export function getRelatedProducts(slug: string, count = 3): Product[] {

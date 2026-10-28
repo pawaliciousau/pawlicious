@@ -3,13 +3,16 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import UnavailableBanner from "@/components/UnavailableBanner";
 
 export default function ProductGallery({
   images,
   productName,
+  unavailable = false,
 }: {
   images: string[];
   productName: string;
+  unavailable?: boolean;
 }) {
   const [active, setActive] = useState(0);
 
@@ -35,6 +38,7 @@ export default function ProductGallery({
             />
           </motion.div>
         </AnimatePresence>
+        {unavailable && <UnavailableBanner size="lg" />}
       </div>
       {images.length > 1 && (
         <div className="mt-4 grid grid-cols-4 gap-3">

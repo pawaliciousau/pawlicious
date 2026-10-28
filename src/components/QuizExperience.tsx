@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { quizStepVariants } from "@/lib/animations";
-import { PRODUCTS, SIZE_OPTIONS, type Product } from "@/lib/products";
+import { PRODUCTS, SIZE_OPTIONS, UNAVAILABLE_LABEL, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import UnavailableBanner from "@/components/UnavailableBanner";
 
 type LifeStage = "Puppy" | "Adult" | "Senior";
 type Vibe = "Tiny tornado" | "Professional napper" | "Adventure buddy" | "Snack enthusiast";
@@ -54,6 +55,7 @@ export default function QuizExperience() {
   }
 
   function handleAdd() {
+    if (match.unavailable) return;
     const size = SIZE_OPTIONS[0];
     addItem(
       {
@@ -262,6 +264,7 @@ export default function QuizExperience() {
                     sizes="400px"
                     className="object-cover"
                   />
+                  {match.unavailable && <UnavailableBanner />}
                 </div>
                 <div className="p-7 text-left">
                   <p className="script-accent text-xl text-teal">{match.tagline}</p>
@@ -278,9 +281,14 @@ export default function QuizExperience() {
                     <button
                       type="button"
                       onClick={handleAdd}
-                      className="btn btn-coral flex-1 !py-2.5 !text-sm"
+                      disabled={match.unavailable}
+                      className={
+                        match.unavailable
+                          ? "btn flex-1 cursor-not-allowed bg-ink/10 !py-2.5 !text-sm text-ink-faint"
+                          : "btn btn-coral flex-1 !py-2.5 !text-sm"
+                      }
                     >
-                      {added ? "Added ✓" : "Add to cart"}
+                      {match.unavailable ? UNAVAILABLE_LABEL : added ? "Added ✓" : "Add to cart"}
                     </button>
                   </div>
                 </div>

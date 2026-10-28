@@ -28,6 +28,12 @@ export async function POST(req: Request) {
 
   for (const line of requestedLines) {
     const product = getProductBySlug(line.slug);
+    if (product?.unavailable) {
+      return NextResponse.json(
+        { error: `${product.name} is currently unavailable. Please remove it from your cart.` },
+        { status: 400 }
+      );
+    }
     const validSize = SIZE_OPTIONS.some((opt) => opt.grams === line.grams);
     if (!product || !validSize) continue;
 
@@ -70,6 +76,9 @@ export async function POST(req: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items,
+      // Shows an "Add promotion code" field on Stripe's payment page. The codes
+      // themselves (e.g. WOOFWOOF) are managed in the Stripe dashboard.
+      allow_promotion_codes: true,
       ...(pickup ? {} : { shipping_address_collection: { allowed_countries: ["AU" as const] } }),
       phone_number_collection: { enabled: true },
       metadata: { fulfilment: pickup ? "pickup" : "delivery" },

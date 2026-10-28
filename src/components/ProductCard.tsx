@@ -4,11 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { Product } from "@/lib/products";
-import { SIZE_OPTIONS } from "@/lib/products";
+import { SIZE_OPTIONS, UNAVAILABLE_LABEL } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import QtyStepper from "@/components/QtyStepper";
 import { HeartIcon } from "@/components/icons";
+import UnavailableBanner from "@/components/UnavailableBanner";
 
 const PROTEIN_ICONS: Partial<Record<Product["slug"], string>> = {
   kangaroo: "/assets/icons/kangaroo-icon.png",
@@ -21,8 +22,10 @@ export default function ProductCard({ product }: { product: Product }) {
   const size = SIZE_OPTIONS[sizeIdx];
   const accentBg = product.accent === "coral" ? "bg-coral" : "bg-teal";
   const proteinIconSrc = PROTEIN_ICONS[product.slug];
+  const unavailable = product.unavailable === true;
 
   function handleAdd() {
+    if (unavailable) return;
     addItem(
       {
         slug: product.slug,
@@ -51,7 +54,8 @@ export default function ProductCard({ product }: { product: Product }) {
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 90vw"
           className="object-cover transition-transform duration-[450ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
         />
-        {product.isFavourite && (
+        {unavailable && <UnavailableBanner />}
+        {product.isFavourite && !unavailable && (
           <span className="absolute right-4 top-4 rounded-full bg-teal px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-cream-soft">
             Fan fave!
           </span>
@@ -81,6 +85,18 @@ export default function ProductCard({ product }: { product: Product }) {
         <p className="text-sm text-ink-soft">{product.description}</p>
       </div>
 
+      {unavailable ? (
+        <div className="mt-4">
+          <button
+            type="button"
+            disabled
+            className="btn w-full cursor-not-allowed !py-2.5 !text-sm bg-ink/10 text-ink-faint"
+          >
+            {UNAVAILABLE_LABEL}
+          </button>
+        </div>
+      ) : (
+        <>
       <div className="mt-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           {SIZE_OPTIONS.map((opt, i) => (
@@ -114,6 +130,8 @@ export default function ProductCard({ product }: { product: Product }) {
           Add to cart
         </button>
       </div>
+        </>
+      )}
     </div>
   );
 }

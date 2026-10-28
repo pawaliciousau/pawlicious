@@ -155,6 +155,10 @@ export default function CheckoutExperience() {
               </div>
             </div>
 
+            <p className="mt-5 text-xs text-teal/70">
+              Got a promo code? You can enter it on the secure payment page.
+            </p>
+
             <button
               type="button"
               disabled={lines.length === 0 || loading}
