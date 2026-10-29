@@ -10,9 +10,8 @@ export const FREE_SHIPPING_THRESHOLD = 250;
 export const DELIVERY_FEE = 14.95;
 
 export const CONTACT = {
-  phone: "0412 626 627",
-  phoneHref: "tel:0412626627",
-  email: "paw.a.licious.dogfood@gmail.com",
+  email: "info@pawalicious.com.au",
+  emailHref: "mailto:info@pawalicious.com.au",
   instagram: "@paw_a_licious_dogfood",
   instagramHref: "https://instagram.com/paw_a_licious_dogfood",
 };

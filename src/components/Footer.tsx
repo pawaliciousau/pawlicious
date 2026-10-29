@@ -136,8 +136,8 @@ export default function Footer() {
         <div className="container-shell flex flex-col items-center justify-between gap-2 text-xs text-ink-faint sm:flex-row">
           <p>© {new Date().getFullYear()} Paw-a-licious. Made in Australia.</p>
           <div className="flex items-center gap-4">
-            <a className="link-underline" href={CONTACT.phoneHref}>
-              {CONTACT.phone}
+            <a className="link-underline" href={CONTACT.emailHref}>
+              {CONTACT.email}
             </a>
             <a
               className="link-underline"

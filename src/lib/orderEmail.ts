@@ -1,5 +1,5 @@
 import type Stripe from "stripe";
-import { CONTACT, DELIVERY_INFO } from "./utils";
+import { DELIVERY_INFO } from "./utils";
 
 const SITE_URL = "https://www.pawalicious.com.au";
 
@@ -75,7 +75,7 @@ export function buildOrderEmail(session: Stripe.Checkout.Session): OrderEmail | 
     "Keep frozen for up to 5 months from the date on the package. Thaw in the fridge for at least 24 hours, and use within 5 days once thawed.",
     `Full guide: ${SITE_URL}/how-to-serve`,
     "",
-    "Questions? Reply to this email or call " + CONTACT.phone + ".",
+    "Questions? Just reply to this email.",
     "",
     "With love,",
     "The Paw-a-licious team",
@@ -130,7 +130,7 @@ export function buildOrderEmail(session: Stripe.Checkout.Session): OrderEmail | 
     <a href="${SITE_URL}/how-to-serve" style="color:#e8560f;font-weight:bold;">See the full How to Serve guide</a>
   </p>
 
-  <p style="margin:28px 0 4px;font-size:14px;color:#5b534c;">Questions? Just reply to this email or call ${esc(CONTACT.phone)}.</p>
+  <p style="margin:28px 0 4px;font-size:14px;color:#5b534c;">Questions? Just reply to this email.</p>
   <p style="margin:0;font-size:14px;color:#e8560f;font-weight:bold;">With love, the Paw-a-licious team</p>
 </div>
 </body></html>`;

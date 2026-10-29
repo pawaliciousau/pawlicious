@@ -44,18 +44,9 @@ export default function CheckoutExperience() {
   return (
     <>
       <PageIntro eyebrow="Checkout" title="Your order summary">
-        Secure payment via Stripe. Questions about your order? Message us on{" "}
-        <a
-          href={CONTACT.instagramHref}
-          target="_blank"
-          rel="noreferrer"
-          className="link-underline font-bold"
-        >
-          Instagram
-        </a>{" "}
-        or call{" "}
-        <a href={CONTACT.phoneHref} className="link-underline font-bold">
-          {CONTACT.phone}
+        Secure payment via Stripe. Questions about your order? Message us at{" "}
+        <a href={CONTACT.emailHref} className="link-underline font-bold">
+          {CONTACT.email}
         </a>
         .
       </PageIntro>
